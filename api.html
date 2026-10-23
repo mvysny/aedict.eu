@@ -1,0 +1,305 @@
+---
+title: "API"
+---
+
+
+<div style="padding-top: 46px">
+<h2>Detecting Aedict</h2>
+<p>Aedict 3.x presence can be queried as follows:</p>
+<pre><code>public static boolean isAedictPresent(Activity context) {
+    final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_SEARCH_JMDICT");
+    return !activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty();
+}</code></pre>
+</div>
+
+<div style="padding-top: 23px">
+<h2>Searching for a string in Aedict</h2>
+<h3>From Anywhere (since Aedict 3.50.11)</h3>
+<p>You can simply embed the following links into your html page, into your Ankidroid card, or into your Android application:</p>
+
+<ul>
+<li><a href="aedict://はは">aedict://はは</a> - use the <code>&lt;a href=&quot;aedict://はは&quot;>はは&lt;/a></code> HTML code to add such a link to your HTML code or Ankidroid card</li>
+<li><a href="aedict://はは%20は">aedict://はは%20は</a></li>
+<li><a href="aedict://a?q=はは%20">aedict://a?q=はは%20</a></li>
+<li><a href="http://aedict?q=はは">http://aedict?q=はは</a> - for certain sites that would reject to render any links not starting with http:// or https://
+</ul>
+<p>Note that you need to escape spaces with <code>%20</code>. Some browsers will escape Japanese characters for you,
+some will not. You may need to escape the characters yourself, see the <a href="https://www.url-encode-decode.com/">URL Encode Decode</a>
+page for more details.</p>
+
+<h3>From Your Android App</h3>
+<p><strong>Important</strong>: you can use Service API to query Aedict, since Aedict 3.30. For more details, please scroll down.</p>
+<p>To display the Search Activity in Aedict, you can use the following intent: <code>"sk.baka.aedict3.action.ACTION_SEARCH_JMDICT"</code>.</p>
+
+<table>
+<thead><tr><td>Intent Extra</td><td>Since</td><td>Type</td><td>Meaning</td></tr></thead>
+<tr>
+<td>kanjis</td>
+<td>2.0</td>
+<td>String</td>
+<td>What to search for. Aedict 3.x accepts anything: kanji, hiragana, katakana, romaji, english, french, etc. Aedict 3.x also automatically deinflects words. See other parameters for details.</td>
+</tr>
+<tr>
+<td>deinflect</td>
+<td>3.2</td>
+<td>Boolean</td>
+<td>Defaults to true. If set to false, no verb deinflection is performed.</td>
+</tr>
+<tr>
+<td>match_jp</td>
+<td>3.2</td>
+<td>Enum</td>
+<td>Defaults to StartsWith. May have the following values: <code>Exact</code> - exact match; <code>StartsWith</code> - matches any JMDict entry starting with given term; <code>EndsWith</code> - matches any JMDict entry ending with given term; <code>Substring</code> - matches any JMDict entry which contains given term</td>
+</tr>
+<tr>
+<td>match_sense</td>
+<td>3.2</td>
+<td>Enum</td>
+<td>Defaults to Exact. Defines how the term is matched to the sense (english, french, dutch, etc) part of the JMDict entry. May have the following values: <code>Exact</code> - exact word match, e.g. "auto" will match "auto mechanic" but not "automechanic"; <code>StartsWith</code> - "car" will match "crane carrier" but not "ecar"; <code>EndsWith</code> and <code>Substring</code> are unsupported because of Lucene limitations</td>
+</tr>
+<tr>
+<td>analysis_fallback</td>
+<td>3.2</td>
+<td>Boolean</td>
+<td>Defaults to true. If true, Aedict will try to analyze given japanese sentence present in the "kanjis" field if JMDict search returns no results. If false, analysis is not performed and Aedict simply displays "No Results"</td>
+</tr>
+<tr>
+<td>search_in_examples</td>
+<td>3.2</td>
+<td>Boolean</td>
+<td>Defaults to false. If false, JMDict search is performed. If true, Tatoeba example sentence search is performed.</td>
+</tr>
+<tr>
+<td>search_in_kanjidic</td>
+<td>3.4.35</td><td>Boolean</td><td>Defaults to false. If false, JMDict search is performed. If true, Kanjidic2 search is performed.</td></tr>
+<tr><td>return_results</td><td>3.4.9</td><td>Boolean</td><td>Defaults to false. If false, results are simply shown in Aedict as a list. If true, results are returned as a result intent - just send this intent using startActivityForResult&#40;&#41; function and then wait for the response intent in the onActivityResult&#40;&#41; function; more info here: <a href="http://developer.android.com/training/basics/intents/result.html">http://developer.android.com/training/basics/intents/result.html</a>. The intent will contain serializable extra <code>"result"</code>, which can be cast to <code>ArrayList&lt;HashMap&lt;String, String&gt;&gt;</code>. The result will contain a list of entries, represented as a <code>HashMap</code>, mapping from variable name &#40;omitting the starting/trailing percent characters&#41; to the variable contents. For a list of variables, please see <a href="export.html">Custom Export Format</a>; also see 
+<a href="http://code.google.com/p/aedict/issues/detail?id=243">bug #243</a> for details.</td></tr>
+<tr><td>return_user_selected_result</td><td>3.4.35</td><td>Boolean</td><td>Defaults to false. If true and the user clicks an entry, the entry itself is sent back as a response data Intent, containing all tags as String extras.</td></tr>
+<tr><td>prolong_vowels</td><td>3.4.31</td><td>Boolean</td><td>Defaults to false. If true, searching e.g. for shojiki will also find shoujiki</td></tr>
+<tr><td>jlpt</td><td>3.4.31</td><td>Integer</td><td>Missing by default, 1..5, corresponds to JNLP N1..N5 levels, N5 being the easiest one. Only applicable to JMDict search. If specified, result words must belong to the JNLP level specified</td></tr>
+<tr><td>commonOnly</td><td>3.4.31</td><td>Boolean</td><td>Defaults to false. Applicable to JMDict search only. If true, only common words &#40;P&#41; are returned</td></tr>
+<tr><td>showEntryDetailOnSingleResult</td><td>3.7</td><td>Boolean</td><td>Defaults to false. If true and the search produces only one entry, that one entry&apos;s details is shown immediately. However, if return_results is set to true then this is ignored</td></tr>
+<tr><td>maxResults</td><td>3.32</td><td>Integer</td><td>Defaults to 200 for JMDict search, 100 for example sentence search. Maximum number of results to return.</td></tr>
+<tr><td>disable_globbing</td><td>3.39.12</td><td>Boolean</td><td>Defaults to false. If true, * and ? characters are treated as other delimiters and ignored.</td></tr>
+</table>
+<p>Example:</p>
+<pre><code>final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_SEARCH_JMDICT");
+intent.putExtra("kanjis", "saseru");
+intent.putExtra("deinflect", false);
+intent.putExtra("match_jp", "Exact");
+startActivity(intent);</code></pre>
+</div>
+
+<div style="padding-top: 23px">
+<h2>Searching for a string in Aedict, no UI</h2>
+<p>If you wish to use <code>return_results</code> but you do not like Aedict showing you UI, please use <code>"sk.baka.aedict3.action.ACTION_SEARCH_JMDICT_NOUI"</code> action instead. You can use all of the parameters mentioned above;
+however the <code>return_results</code> parameter will be ignored and will always be <code>true</code>. This is available since Aedict 3.18.</p>
+</div>
+
+<div style="padding-top: 23px">
+<h2>Exporting Flashcard</h2>
+<p>Aedict is able to export selected entry as a flash card, by sending a special intent, with the following contents:</p>
+<table>
+<tr><td>Intent Action</td><td><code>"org.openintents.action.CREATE_FLASHCARD"</code></td></tr>
+<tr><td>Intent extra "SOURCE_TEXT"</td><td><code>"Aedict Notepad"</code></td></tr>
+<tr><td>Intent extra "TARGET_TEXT"</td><td><code>The String entry details in the form of "[default]\n"+ kanji + " [" + reading +"]:" + english</code></td></tr>
+</table>
+<p>Aedict 3.4.9 is now also able to export intents as described here: <a href="https://code.google.com/p/ankidroid/wiki/AddIntent#Proposed_new_Intent">https://code.google.com/p/ankidroid/wiki/AddIntent#Proposed_new_Intent</a>. For more information see <a href="http://code.google.com/p/aedict/issues/detail?id=264">bug #264</a></p></div>
+
+<div style="padding-top: 23px">
+<h2>Kanji search activities</h2>
+<p>Since Aedict 3.5, you can start the following action to search for a kanji (all data entered by the user):</p>
+<ul><li>sk.baka.aedict3.action.ACTION_SEARCH_UNITED</li></ul>
+<p>You can start the activity as follows:</p>
+<pre><code>final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_SEARCH_UNITED");
+startActivityForResult(intent, xx);</code></pre>
+<p>When the user clicks a kanji, the activity terminates and the kanji is returned, in the kanji field:</p>
+<pre><code>public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  if (requestCode == xx && resultCode == Activity.RESULT_OK) {
+    String kanji = data.getStringExtra("kanji");
+    // do something with the kanji.
+  }
+}</code></pre>
+</div>
+
+<div style="padding-top: 23px">
+<h2>Programmatic Kanji search</h2>
+<p>Since Aedict 3.4.35, you can send the following intent, to search by kanji parts or the SKIP code: the <code>"sk.baka.aedict3.action.ACTION_SEARCH_KANJIDIC2"</code> intent. When fired, Aedict3 will perform a search, it will show result list to the user and the selected kanji is returned back to the caller activity. The following table summarizes the intent parameters:</p>
+<table>
+<thead><tr><td>Intent Extra</td><td>Since</td><td>Type</td><td>Meaning</td></tr></thead>
+<tr><td>parts</td><td>3.4.35</td><td>String</td><td>All parts the kanji must contain. Note that if a non-part character is present, the result will return zero results</td></tr>
+<tr><td>skip</td><td>3.4.35</td><td>String</td><td>Ignored if parts extra is not null. If present, it must be in the format of 4-1-4</td></tr>
+</table>
+<p>Example:</p>
+<pre><code>final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_SEARCH_KANJIDIC2");
+intent.putExtra("parts", "豆頁");
+startActivityForResult(intent, xx);</code></pre>
+<p>When the user clicks a kanji, the activity terminates and the kanji is returned, in the kanji field:</p>
+<pre><code>public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  if (requestCode == xx && resultCode == Activity.RESULT_OK) {
+    String kanji = data.getStringExtra("kanji");
+    // do something with the kanji 頭
+  }
+}</code></pre>
+</div>
+
+<div style="padding-top: 23px">
+<h2>Resolve Kanjis</h2>
+<p>Since Aedict 3.7:</p>
+<pre><code>final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_RESOLVE_KANJIDIC2");
+intent.putExtra("kanji", "豆頭");
+startActivityForResult(intent, xx);</code></pre>
+<p>Will result in an immediate response, with no UI being displayed at Aedict&apos;s side:</p>
+<pre><code>public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  if (requestCode == xx && resultCode == Activity.RESULT_OK) {
+    List<Map<String, String>> result = data.getSerializableExtra("result");
+    String readingOf豆 = result.get(0).get("reading");
+    ...
+  }
+}</code></pre>
+<p>The intent will contain serializable extra "result", which can be cast to <code>List&lt;HashMap&lt;String, String&gt;&gt;</code>. The result will contain a list of entries, represented as a <code>HashMap</code>, mapping from variable name (omitting the starting/trailing percent characters) to the variable contents. For a list of variables, please see <a href="export.html">Custom Export Format</a>.</p>
+<p><strong>Since Aedict 3.31:</strong> To resolve given kanji set and show the result on-screen, in Aedict&apos;s activity:</p>
+<pre><code>final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_RESOLVE_KANJIS");
+intent.putExtra("kanjis", "豆頭");
+startActivity(intent);</code></pre>
+<p>This will show a list with two kanjis, 豆 and 頭.
+</div>
+
+<div style="padding-top: 23px">
+<h2>Service API</h2>
+<p>Since Aedict 3.30: You can now query Aedict Service API instead of launching Intents. This has the advantage that Aedict is really hidden in the background, and the API is simpler.
+Just use the following helper class freely.
+</p>
+<pre><code>
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+
+/**
+ * A simple Aedict client. Just create the client in your Activity onStart() method and destroy it in your Activity onStop() method.
+ * @author mvy
+ */
+public class AedictClient {
+
+	private final Listener listener;
+	private final Context context;
+
+	/**
+	 * @param listener notifies you of results computed by Aedict.
+	 */
+	public AedictClient(Context context, Listener listener) {
+		this.listener = listener;
+		this.context = context;
+		final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_SEARCH_SERVICE");
+		// the intent must be explicit, otherwise Jellybean will crash
+		// http://stackoverflow.com/questions/27981246/dealing-with-implicit-intent-future-deprecation-in-lollipop
+		intent.setPackage("sk.baka.aedict3");
+		context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+	}
+
+	public interface Listener {
+		/**
+		 * Notifies you of result.
+		 * @param entries a list of result entries, represented as a map, mapping variable name to a value. For example,
+		 * the map will contain key "kanji" with the value of "母". See http://aedict.eu/export.html for a list of all variables which
+		 * will be present in the map. Never null, may be empty.
+		 */
+		void onResult(List&lt;Map&lt;String, String&gt;&gt; entries);
+	}
+
+	/**
+	 * http://aedict.eu/api.html
+	 * See the ACTION_SEARCH_JMDICT Activity.
+	 */
+	private static final int SEARCH_JMDICT = 0;
+
+	/**
+	 * http://aedict.eu/api.html
+	 * <p></p>
+	 * See the ACTION_RESOLVE_KANJIDIC2 Activity.
+	 */
+	private static final int RESOLVE_KANJI = 1;
+
+	private class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(@NotNull Message msg) {
+			final List&lt;Map&lt;String, String&gt;&gt; result = (List&lt;Map&lt;String, String&gt;&gt;) msg.getData().getSerializable("result");
+			listener.onResult(result);
+		}
+	}
+
+	private final Messenger messenger = new Messenger(new IncomingHandler());
+
+	/**
+	 * Performs JMDict/Tatoeba search. See http://aedict.eu/api.html for more information.
+	 * @param kanjis the search query, Aedict 3.x accepts anything: kanji, hiragana, katakana, romaji, english, french, etc. Aedict 3.x also automatically deinflects words. See other parameters for details.
+	 * @param otherArgs other arguments as specified at http://aedict.eu/api.html
+	 * @throws RemoteException
+	 */
+	public void searchJmdict(String kanjis, Bundle otherArgs) throws RemoteException {
+		if (otherArgs == null) {
+			otherArgs = new Bundle();
+		}
+		otherArgs.putString("kanjis", kanjis);
+		send(SEARCH_JMDICT, otherArgs);
+	}
+
+	private void send(int what, Bundle b) throws RemoteException {
+		final Message msg = Message.obtain(null, what);
+		msg.setData(b);
+		msg.replyTo = messenger;
+		aedictService.send(msg);
+	}
+
+	/**
+	 * Resolves all given kanji characters. All non-kanji characters are ignored.
+	 * @param kanji resolve given Kanji characters, e.g. "豆頭"
+	 * @throws RemoteException
+	 */
+	public void resolveKanjis(String kanji) throws RemoteException {
+		final Bundle b = new Bundle();
+		b.putString("kanji", kanji);
+		send(RESOLVE_KANJI, b);
+	}
+
+	private Messenger aedictService = null;
+	private boolean mIsBound;
+
+	/**
+	 * Class for interacting with the main interface of the service.
+	 */
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			aedictService = new Messenger(service);
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			aedictService = null;
+		}
+	};
+
+	/**
+	 * Call in your Activity onStop(), to unbind from the search service.
+	 */
+	public void destroy() {
+		if (mIsBound) {
+			context.unbindService(mConnection);
+			mIsBound = false;
+		}
+	}
+}
+</code></pre>
+</div>

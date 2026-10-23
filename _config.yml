@@ -1,0 +1,22 @@
+# Every page keeps the flat *.html URL of the old site: installed apps and the Google Play
+# listings link to them (faq.html, api.html, export.html, privacy.html, <app>/index.html).
+permalink: none
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor/
+  - old/
+
+defaults:
+  - scope: { path: "" }
+    values: { layout: default, app: aedict }
+  - scope: { path: reader }
+    values: { app: reader }
+  - scope: { path: ocr }
+    values: { app: ocr }
+  - scope: { path: kanjipadextension }
+    values: { app: kanjipadextension }
+  - scope: { path: kanjidrawpractice }
+    values: { app: kanjidrawpractice }

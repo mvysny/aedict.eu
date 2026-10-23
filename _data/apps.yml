@@ -1,0 +1,72 @@
+# One entry per app; a page picks its entry by `app`, set per directory in _config.yml.
+# root: the path from the app's directory to the site root, where the shared css/js/images live.
+
+aedict:
+  title: Aedict
+  site_title: Aedict
+  root: ""
+  since: 2014
+  menu:
+    - { href: index.html, label: Home }
+    - { href: faq.html, label: FAQ }
+    - { href: privacy.html, label: Privacy }
+    - { href: extensions.html, label: Extensions }
+    - { href: changelog.html, label: Changelog }
+    - { href: export.html, label: Export }
+    - { href: api.html, label: API }
+    - { href: sponsors.html, label: Sponsors }
+  reviews: &aedict_reviews
+    - { href: "http://pouncingant.blogspot.sk/2014/01/aedict3-all-grown-up.html", label: PouncingAnt Review }
+    - { href: "http://japanisch-lernen.info/kanji-lernen-aedict-ankidroid/", label: How to use Aedict3 with AnkiDroid, note: " - in German" }
+    - { href: "http://www.reddit.com/r/LearnJapanese/comments/2md227/a_definitive_list_of_the_best_japaneseenglish/", label: Review on Reddit }
+
+reader:
+  title: Aedict Reader Popup
+  site_title: Aedict Popup
+  root: ../
+  since: 2015
+  menu:
+    - { href: index.html, label: Home }
+    - { href: privacy.html, label: Privacy }
+    - { href: faq.html, label: FAQ }
+    - { href: changelog.html, label: Changelog }
+    - { href: ../index.html, label: Aedict }
+  reviews:
+    - { href: "http://pouncingant.blogspot.sk/2015/09/every-app-has-dictionary-now-aedict.html", label: PouncingAnt Review }
+    - { href: "https://www.youtube.com/watch?v=zGALYnUrbJY", label: Youtube tutorial }
+
+ocr:
+  title: Aedict OCR
+  site_title: Aedict OCR
+  root: ../
+  since: 2014
+  menu:
+    - { href: index.html, label: Home }
+    - { href: faq.html, label: FAQ }
+    - { href: privacy.html, label: Privacy }
+    - { href: changelog.html, label: Changelog }
+    - { href: api.html, label: API }
+  reviews: *aedict_reviews
+
+kanjipadextension:
+  title: Aedict Kanjipad Extension
+  site_title: Aedict Kanjipad
+  root: ../
+  since: 2014
+  menu:
+    - { href: index.html, label: Home }
+    - { href: changelog.html, label: Changelog }
+    - { href: privacy.html, label: Privacy }
+    - { href: ../index.html, label: Aedict }
+  reviews: *aedict_reviews
+
+kanjidrawpractice:
+  title: Aedict KanjiDraw Practice
+  site_title: KanjiDraw Practice
+  root: ../
+  since: 2014
+  menu:
+    - { href: index.html, label: Home }
+    - { href: changelog.html, label: Changelog }
+    - { href: ../index.html, label: Aedict }
+  reviews: *aedict_reviews
