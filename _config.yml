@@ -6,8 +6,10 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
+  - AGENTS.md
+  - CLAUDE.md
+  - design/
   - vendor/
-  - old/
 
 defaults:
   - scope: { path: "" }
