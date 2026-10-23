@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e -o pipefail
+
+./build
+
+#scp -r ~/temp/stranka/target/* root@aedict.eu:/var/www/aedict/
+#ssh root@aedict.eu chmod a+r /var/www/aedict
+
+scp -r ~/temp/stranka/target/* root@aedict-online.eu:/var/www/aedict/
+ssh root@aedict-online.eu chmod a+r /var/www/aedict
+
