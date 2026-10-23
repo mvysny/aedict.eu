@@ -20,4 +20,11 @@ then open http://127.0.0.1:4000/.
 ## Publishing
 
 Push to `master`; GitHub Pages builds it from the branch root and serves it at
-https://mvysny.github.io/aedict.eu/.
+https://aedict.eu/ (`www.aedict.eu` and https://mvysny.github.io/aedict.eu/ redirect there),
+https enforced.
+
+The domain is registered at GoDaddy, which also hosts its DNS: `aedict.eu` `A`/`AAAA` to GitHub
+Pages' addresses, `www` `CNAME mvysny.github.io.`, and the `_github-pages-challenge-mvysny` `TXT`
+that verifies the domain for the `mvysny` account (github.com/settings/pages). GitHub issues and
+renews the certificate itself; should it ever stay unissued, remove and re-add the custom domain
+in the repo's Pages settings.

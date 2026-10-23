@@ -25,7 +25,7 @@ Every fact lives in exactly one of these; the others link to it.
 ## Invariants
 
 - **A published URL never moves.** Installed apps (`../aedict`), the Google Play listings and the indexer link to `faq.html`, `api.html`, `export.html`, `privacy.html`, `<app>/index.html` and `files/jyouyou__strokeEditDistance.csv`, and Pages has no redirects. See `D_jekyll_github_pages`.
-- **Links are relative, never root-absolute.** The site is served under `/aedict.eu/` on github.io until the DNS moves, at `/` after.
+- **Links are relative, never root-absolute.** The layout's `app.root` relies on it, and the site then serves under any path: `aedict.eu`, or a fork's github.io project URL.
 - **Everything a page loads is https.** An `http://` script, stylesheet, image or iframe is blocked as mixed content.
 - **A file that is not part of the site is in `_config.yml`'s `exclude`.** Jekyll publishes everything else, Markdown included.
 
@@ -37,6 +37,7 @@ Every fact lives in exactly one of these; the others link to it.
 - `_includes/intro/<app>.html` — each app's intro and store badges under the header.
 - `css/`, `js/`, `images/`, `templatemo_style.css` — the shared templatemo 388 "Runner" theme.
 - `files/` — data files other projects download.
+- `CNAME` — the custom domain `aedict.eu`; GitHub's Pages settings write it.
 
 ## Conventions
 
