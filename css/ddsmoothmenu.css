@@ -19,7 +19,9 @@
 .ddsmoothmenu ul li a {
 	display: block;
 	height: 30px;
-	width: 77px;
+	min-width: 65px; /* 77px with the padding; a longer label widens its item instead of wrapping */
+	padding: 0 6px;
+	white-space: nowrap;
 	margin-right: 5px;
 	line-height: 29px;
 	font-size: 13px;
@@ -37,7 +39,8 @@ display: inline-block;
 
 .ddsmoothmenu ul li a.selected, .ddsmoothmenu ul li a:hover { /*CSS class that's dynamically added to the currently active menu items' LI A element*/
 	color: #fff;
-	background: url(../images/templatemo_menu_hover.png)
+	background: url(../images/templatemo_menu_hover.png);
+	background-size: 100% 100%;
 }
 
 /*1st sub level menu*/
