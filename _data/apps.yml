@@ -10,7 +10,7 @@ aedict:
     - { href: index.html, label: Home }
     - { href: faq.html, label: FAQ }
     - { href: privacy.html, label: Privacy }
-    - { href: extensions.html, label: Extensions }
+    - { href: extensions.html, label: Companion apps }
     - { href: changelog.html, label: Changelog }
     - { href: export.html, label: Export }
     - { href: api.html, label: API }
