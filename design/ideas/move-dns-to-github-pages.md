@@ -20,39 +20,34 @@ Nothing else lives on the domain, so the whole zone can follow the site. Every f
 - **The zone moves to GoDaddy DNS**, so the registrar owns the domain outright and the
   DigitalOcean account can go. `aedict-online.eu` is on DigitalOcean DNS too; its zone and the
   droplet are `migrate-to-hetzner.md`'s in `../aedict-online`.
-- **The name-server switch is the cut-over**: the GoDaddy zone carries GitHub's records from the
-  start, so DigitalOcean's records are never edited. Resolvers follow the new delegation within a
-  day; until then they get the droplet's copy, a working site too, so no TTL lowering.
+- **A day of downtime is accepted** (the site is not that popular), so DigitalOcean is never
+  touched: the name-server switch is the cut-over, and whatever resolvers see mid-way does not
+  matter.
 
 ## Steps
 
-1. **Verify the domain** in the *account's* settings (github.com/settings/pages → "Add a domain"),
-   not the repo's: it asks for a `TXT` record `_github-pages-challenge-mvysny.aedict.eu`, added at
-   DigitalOcean, which still answers. Without it, any GitHub repo can claim `aedict.eu` the moment
-   the DNS points at GitHub.
-2. **Prepare the GoDaddy zone** (values per GitHub's "Managing a custom domain" docs, re-checked
-   2026-10-23), deleting GoDaddy's default parked `A` and `www` records:
+1. **GitHub: claim the domain.** Set the custom domain
+   (`gh api -X PUT repos/mvysny/aedict.eu/pages -f cname=aedict.eu`); with the legacy build this
+   commits a `CNAME` file to `master`, so pull it. A domain set on this repo can't be claimed by
+   another, so the DNS may point at GitHub before verification. Start "Add a domain" in the
+   *account's* settings (github.com/settings/pages) and note its `TXT` record
+   `_github-pages-challenge-mvysny.aedict.eu`; verify in step 3.
+2. **GoDaddy, in one sitting**: name servers to "GoDaddy default"; in the new zone delete the
+   parked `A` and `www` records and add (values per GitHub's "Managing a custom domain" docs,
+   re-checked 2026-10-23):
    - `aedict.eu` `A` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - `aedict.eu` `AAAA` → `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
    - `www.aedict.eu` `CNAME` → `mvysny.github.io.`; GitHub redirects `www` to the apex.
    - the `TXT` record from step 1.
-
-   If GoDaddy edits no records while the name servers point elsewhere, enter them right after
-   step 3's switch; the parked page meanwhile reaches only resolvers that moved in those minutes.
-3. **Set the custom domain, then switch the name servers.** First `aedict.eu` in the repo's Pages
-   settings (or `gh api -X PUT repos/mvysny/aedict.eu/pages -f cname=aedict.eu`): with the legacy
-   build this commits a `CNAME` file to `master`, so pull it; GitHub wants it before the DNS points
-   there, against takeover. Then, at GoDaddy, the name servers to "GoDaddy default". Relative links
-   keep working; nothing in the pages changes.
-4. **Wait for the certificate**: minutes, up to 24 hours, of certificate errors until GitHub issues
-   it, then "Enforce HTTPS" (`gh api -X PUT repos/mvysny/aedict.eu/pages -F https_enforced=true`).
-5. **Check** that `http://aedict.eu/faq.html`, `api.html`, `export.html`, `privacy.html`,
-   `http://www.aedict.eu/` and `http://aedict.eu/files/jyouyou__strokeEditDistance.csv` answer
-   through the https redirect: the apps, the Google Play listings and the indexer (`wget`, which
-   follows it) use exactly these.
-6. **Delete the `aedict.eu` zone at DigitalOcean** two days after step 3, once no resolver
-   remembers the old delegation.
-7. **Clean up the droplet** (`../aedict-online`, with the owner): the `aedict.eu` `<Host>` in
+3. **Wait, then finish** (within a day, as the `.eu` delegation's 86400 TTL expires): once `dig`
+   sees GoDaddy's answers, click Verify; once GitHub has issued the certificate, "Enforce HTTPS"
+   (`gh api -X PUT repos/mvysny/aedict.eu/pages -F https_enforced=true`). Then check that
+   `http://aedict.eu/faq.html`, `api.html`, `export.html`, `privacy.html`, `http://www.aedict.eu/`
+   and `http://aedict.eu/files/jyouyou__strokeEditDistance.csv` answer through the https
+   redirect: the apps, the Google Play listings and the indexer (`wget`, which follows it) use
+   exactly these. Relative links keep working; nothing in the pages changes.
+4. **Tidy up, any time later**: delete the `aedict.eu` zone at DigitalOcean; in `../aedict-online`,
+   with the owner, the `aedict.eu` `<Host>` in
    `scripts/dc-full-production/tomcat/docker/server.xml` and the `/var/www/aedict` mount.
 
 ## Graduation
