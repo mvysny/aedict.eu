@@ -8,6 +8,5 @@ Delete this file once the items below are done.
 
 ## Owner, in Play Console
 
-- Aedict: privacy policy URL → `https://aedict.eu/privacy.html` (it still points at the blog).
 - Trader declaration, per app: Terms of Service link → `https://aedict.eu/terms.html` for
   Aedict and Aedict Reader Popup.
