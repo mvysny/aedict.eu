@@ -19,7 +19,7 @@
 .ddsmoothmenu ul li a {
 	display: block;
 	height: 30px;
-	min-width: 65px; /* 77px with the padding; a longer label widens its item instead of wrapping */
+	min-width: 58px; /* 70px with the padding; a longer label widens its item instead of wrapping. Aedict's 9 items must fit the 756px beside the logo, else the menu drops onto the dark intro band */
 	padding: 0 6px;
 	white-space: nowrap;
 	margin-right: 5px;
