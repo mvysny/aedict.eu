@@ -1,5 +1,5 @@
 # Every page keeps the flat *.html URL of the old site: installed apps and the Google Play
-# listings link to them (faq.html, api.html, export.html, privacy.html, <app>/index.html).
+# listings link to them (faq.html, api.html, export.html, privacy.html, terms.html, <app>/index.html).
 permalink: none
 
 exclude:

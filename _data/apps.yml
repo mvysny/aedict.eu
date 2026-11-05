@@ -10,6 +10,7 @@ aedict:
     - { href: index.html, label: Home }
     - { href: faq.html, label: FAQ }
     - { href: privacy.html, label: Privacy }
+    - { href: terms.html, label: Terms }
     - { href: extensions.html, label: Companion apps }
     - { href: changelog.html, label: Changelog }
     - { href: export.html, label: Export }
@@ -28,6 +29,7 @@ reader:
   menu:
     - { href: index.html, label: Home }
     - { href: privacy.html, label: Privacy }
+    - { href: ../terms.html, label: Terms }
     - { href: faq.html, label: FAQ }
     - { href: changelog.html, label: Changelog }
     - { href: ../index.html, label: Aedict }
