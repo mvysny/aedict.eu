@@ -23,7 +23,8 @@ Push to `master`; GitHub Pages builds it from the branch root and serves it at
 https://aedict.eu/ (`www.aedict.eu` and https://mvysny.github.io/aedict.eu/ redirect there),
 https enforced.
 
-The domain is registered at GoDaddy; its DNS zone is on Hetzner's name servers: `aedict.eu`
+The domain is registered at Hetzner (its Domain Registration Robot, since 2026-11-23); its DNS
+zone is on Hetzner's name servers: `aedict.eu`
 `A`/`AAAA` to GitHub Pages' addresses, `www` `CNAME mvysny.github.io.`, the
 `_github-pages-challenge-mvysny` `TXT` that verifies the domain for the `mvysny` account
 (github.com/settings/pages), and iCloud Mail's `MX`, SPF and `apple-domain` `TXT` for
