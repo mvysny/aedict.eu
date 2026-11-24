@@ -44,7 +44,7 @@ Every fact lives in exactly one of these; the others link to it.
 - **Jekyll 3.10 through the `github-pages` gem**, nothing GitHub Pages' own build lacks.
 - **A page is HTML with a `title:` front matter**; the layout and the app come from `_config.yml` defaults.
 - **Shared assets live once at the root**; an app's directory holds only its own icon and screenshots, and the layout reaches the shared ones through `app.root`.
-- **Public repo: no secrets.**
+- **Public repo: no secrets, no personal contact details, no registrar or DNS-zone details.**
 
 ## Commands
 
