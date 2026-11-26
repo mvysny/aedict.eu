@@ -50,6 +50,17 @@ above-mentioned path:</p>
 </div>
         <div class="clear"></div>
 
+<div style="padding-top: 16px" id="sod_corrupted">
+<h4>Q: StrokeOrderDiagram file is corrupted or missing: Failed to load kanji</h4>
+<p>A: Most likely Aedict updated the stroke order diagrams in the background, and Aedict 3.55 and older keep reading the new file through the old one's index until they are restarted. Aedict 3.56 and newer pick up the new file by themselves. To fix it, close Aedict completely (Android Settings / Apps / Aedict / Force stop) and open it again.</p>
+<p>If the error is still there after the restart, the file itself is damaged; please download it again:</p>
+<ul><li>Open Settings / Dictionaries / Dictionary Manager.</li>
+<li>Long-click the SOD Stroke Order Diagrams Vector dictionary, press the trash icon, then click the dictionary to download it again.</li>
+<li>Once the download finishes, force-stop Aedict and open it again.</li></ul>
+<p>The upper-right Delete All Dictionaries icon works too: it deletes all dictionaries, and Update All Dictionaries then downloads the four required ones again; any other dictionary you had, such as Wadoku or Kotowaza, needs a click to download again. Deleting dictionaries never touches your Notepad, Tags, Recently Viewed entries or SRS statistics.</p>
+</div>
+        <div class="clear"></div>
+
 <div style="padding-top: 16px">
 <h4>Q: Missing Kanji Heisig 6th edition information, only Heisig 3rd is shown</h4>
 <p>A: This change has been introduced by the Aedict upgrade to 3.32 and higher. Please see <a href="https://github.com/mvysny/aedict/issues/568">bug #568</a> for details. Generally, the quick field list is not fixed anymore only to "Stroke, Grade, JLPT Level, SKIP, Radical, Parts, Unicode, Heisig 3rd." - you can now fully customize what items you wish to see.</p>

@@ -24,3 +24,13 @@ serves it over https, with no server to keep. Why not keep it on a server of our
 a machine to patch for static files. Why not Jekyll built by Actions: nothing here needs a
 newer Jekyll, and the `github-pages` gem keeps the local build identical to GitHub's. The cost
 we carry: no server-side redirects, so a URL can never move, and a DNS that points at GitHub.
+
+## D_no_changelog — Why no changelog pages, when every app once had one?
+
+They went stale: Aedict's stopped at 3.50.13 in March 2019, the companion apps' in 2014–2016.
+The release notes are written once per release already: Aedict's into `whatsNewText`, which the
+app shows after an update and Play's "What's new" repeats (`../aedict/RELEASING.md`), Reader
+Popup's straight into Play. A page here would be a third copy and one more release step, a step
+that went undone for seven years. No app linked to `changelog.html` and it was never one of the
+URLs the AGENTS.md invariant pins, so deleting it broke no link we control. The old entries are
+in git history.

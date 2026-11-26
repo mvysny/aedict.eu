@@ -12,7 +12,6 @@ aedict:
     - { href: privacy.html, label: Privacy }
     - { href: terms.html, label: Terms }
     - { href: extensions.html, label: Companion apps }
-    - { href: changelog.html, label: Changelog }
     - { href: export.html, label: Export }
     - { href: api.html, label: API }
     - { href: sponsors.html, label: Sponsors }
@@ -31,7 +30,6 @@ reader:
     - { href: privacy.html, label: Privacy }
     - { href: ../terms.html, label: Terms }
     - { href: faq.html, label: FAQ }
-    - { href: changelog.html, label: Changelog }
     - { href: ../index.html, label: Aedict }
   reviews:
     - { href: "http://pouncingant.blogspot.sk/2015/09/every-app-has-dictionary-now-aedict.html", label: PouncingAnt Review }
@@ -46,7 +44,6 @@ ocr:
     - { href: index.html, label: Home }
     - { href: faq.html, label: FAQ }
     - { href: privacy.html, label: Privacy }
-    - { href: changelog.html, label: Changelog }
     - { href: api.html, label: API }
   reviews: *aedict_reviews
 
@@ -57,7 +54,6 @@ kanjipadextension:
   since: 2014
   menu:
     - { href: index.html, label: Home }
-    - { href: changelog.html, label: Changelog }
     - { href: privacy.html, label: Privacy }
     - { href: ../index.html, label: Aedict }
   reviews: *aedict_reviews
@@ -69,6 +65,5 @@ kanjidrawpractice:
   since: 2014
   menu:
     - { href: index.html, label: Home }
-    - { href: changelog.html, label: Changelog }
     - { href: ../index.html, label: Aedict }
   reviews: *aedict_reviews

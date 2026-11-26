@@ -3,7 +3,7 @@
 ## What this is
 
 The Aedict home page, with the pages of its companion apps (Reader Popup, OCR, KanjiPad
-extension, KanjiDraw Practice): what each app does, its FAQ, privacy policy and changelog, and
+extension, KanjiDraw Practice): what each app does, its FAQ and privacy policy, and
 Aedict's export and API reference. Plain HTML pages built by Jekyll and served by GitHub Pages;
 the apps themselves are elsewhere.
 
