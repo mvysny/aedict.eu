@@ -5,22 +5,45 @@ title: "Export"
 
 <div style="padding-top: 46px">
 <h2>Custom export format</h2>
-<p>You can customize your own custom export format, in Aedict <i>Settings / Export / Custom CSV Export Format</i>. Each entry is exported to a single line with user-defined formatting, for example:</p>
-<pre><code>"%kanji%"\t"%kanji% [%reading%]"\t%sense%\n%examples%</code></pre>
+<p>Aedict exports entries as a CSV file for desktop Anki, a spreadsheet or any other program, in a format you write yourself: Aedict <i>Settings / Export / Custom CSV Export Format</i>. Aedict Online has the same setting in its <i>Settings</i>, under <i>Export</i>. Each entry is exported to a single line, the format with every variable replaced by the entry's value. For example:</p>
+<pre><code>"%kanji%"\t"%kanji% [%reading%]"\t%sense_no_flags%\t%examples%</code></pre>
 <p>produces the following output:</p>
-<pre><code>"母"&lt;tab&gt;"母 [はは, はわ, かか, おも, いろは, あも]"&lt;tab&gt;mother
-母ちゃんも同じ事いってたな。だからどうしたってんだよ。オレにゃ関係ない。 - romaji - Mum said the same thing. But, so what? It&apos;s got nothing to do with me.</code></pre>
-<p>This custom formatting is available by selecting entries (by long-click on any dictionary entry list) and selecting "Export as Anki-compatible CSV". You can also export an entire Notepad using the custom formatting, by opening the Notepad activity, selecting "Export Notepad as CSV" and choosing the "Custom" option.</p>
-<p><strong>Tip</strong>: You can export the notepad category-by-category, by long-clicking an item, selecting all items &#40;there is button for that :&#41; and selecting "Export as Anki-compatible CSV".</p>
+<pre><code>"母"&lt;tab&gt;"母 [はは, はわ, かか, おも, いろは, あも]"&lt;tab&gt;mother&lt;tab&gt;母ちゃんも同じ事いってたな。だからどうしたってんだよ。オレにゃ関係ない。 - &lt;reading&gt; - Mum said the same thing. But, so what? It&apos;s got nothing to do with me.</code></pre>
 
-<p>The following items are allowed:</p>
+<h3>Where to export</h3>
+<ul><li>Any list of entries: long-click an entry to start selecting, select the entries (there is a button that selects them all), then <i>Export as Anki-compatible CSV</i> and pick <i>?: Custom</i>.</li>
+<li>The Notepad: <i>Export Notepad as CSV</i>, then <i>Custom</i>, exports the whole Notepad. To export it category by category, select a category's items as in any list.</li>
+<li>The quiz screen: <i>Export as Anki-compatible CSV</i> exports every entry the quiz settings select, not just one quiz's worth.</li>
+<li>Aedict Online: the <i>Save As CSV</i> button of a list of entries, an entry, the Notepad or the quiz, then <i>Custom</i> and <i>Download</i>. It needs you to be logged in.</li></ul>
+<p>The <i>Custom</i> option shows up only once the format is set. In Aedict, <i>Send to apps</i> hands the file to another app, such as Gmail or Dropbox, and <i>Save to disk</i> saves it as a file.</p>
+
+<h3>The built-in formats</h3>
+<p>The other options are written in the same variables, a good start for your own:</p>
+<ul><li><i>2: Kanji, Reading+English</i>: <code>"%kanji%","%reading%: %sense%"</code></li>
+<li><i>2: Kanji+Reading, English</i>: <code>"%furigana_anki%","%sense%"</code></li>
+<li><i>2: English, Kanji+Reading</i>: <code>"%sense%","%furigana_anki%"</code></li>
+<li><i>3: Kanji, Reading, English</i>: <code>"%kanji%","%reading%","%sense%"</code></li>
+<li><i>3: English, Kanji, Reading</i>: <code>"%sense%","%kanji%","%reading%"</code></li>
+<li>The Notepad's <i>Category;Kanji;Reading;Meaning</i>: <code>"%notepad_category%";"%kanji%","%reading%","%sense%"</code></li></ul>
+<p>With <i>Settings / Export / Export Ruby Furigana</i> checked, the built-in formats write <code>%furigana_anki%</code> where they say <code>%reading%</code>. A custom format writes exactly what it says.</p>
+
+<h3>How a format is read</h3>
+<ul><li>Every <code>%variable%</code> from the list below is replaced by the entry's value. Anything else is copied as it is, a misspelled variable such as <code>%kanij%</code> included.</li>
+<li><code>\t</code> is replaced by the TAB character. No other escape is: <code>\n</code> stays a backslash and an n, and every entry is one line.</li>
+<li>Aedict neither quotes nor escapes the values. Meanings are full of commas, so put them in quotes in a comma-separated format, or separate the columns with <code>\t</code>.</li>
+<li>Readings follow Aedict's romanization: while Aedict shows romaji, the readings come out in romaji.</li>
+<li>Meanings come in the dictionary language set in Settings, falling back to English. Example sentences and words come in the example sentences' language, their parts separated by <i>Settings / Export / Custom Sentence Separator</i>, " - " unless you change it.</li></ul>
+
+<h3>Variables</h3>
 <ul><li><code>\t</code> - replaced by the TAB character</li>
 <li><code>%kanji%</code> - replaced by the japanese form, may contain kanji, hiragana or katakana. May equal to <code>%reading%</code> for hiragana/katakana-only entries. Never empty. If multiple kanjis are present, they are comma-separated. For example 日の出</li>
-<li><code>%reading%</code> - entry reading in hiragana or katakana, never empty. If multiple readings are present, they are comma-separated. Example: ひので</li>
-<li><code>%sense%</code> - English (or other lang) translation, for example "(P, n) sunrise"</li>
+<li><code>%reading%</code> - entry reading in hiragana or katakana, never empty. If multiple readings are present, they are comma-separated. Example: ひので. For a kanji, its on and kun readings, then its name readings in brackets.</li>
+<li><code>%sense%</code> - English (or other lang) translation, for example "(P, n) sunrise". The meanings within one sense are separated by commas, the senses by semicolons.</li>
 <li><code>%sense_no_flags%</code> (since Aedict 3.38.5) - English (or other lang) translation with no flags, for example "sunrise"</li>
 <li><code>%examples%</code> - At most three example sentences containing %kanji%, separated by a configurable string, in the form of KANJI1 - READING1 - SENSE1 - KANJI2 - READING2 - ... (if the separator is - ). Note that this item greatly slows the export process.</li>
-<li><code>%words%</code> (since Aedict 3.49) - At most three buddy words for given %kanji%, separated by a configurable string, in the form of KANJI1 - READING1 - SENSE1 - KANJI2 - READING2 - ... (if the separator is - ). Note that this item greatly slows the export process.</li>
+<li><code>%examples_en%</code> (since Aedict 3.50.17) - the translations of the same three example sentences only, in the form of SENSE1 - SENSE2 - SENSE3. Also slows the export down.</li>
+<li><code>%examples_jp%</code> (since Aedict 3.50.17) - the Japanese of the same three example sentences only, in the form of KANJI1 - READING1 - KANJI2 - READING2 - ... Also slows the export down.</li>
+<li><code>%words%</code> (since Aedict 3.49) - At most three words from JMDict written with the kanji, or with the word's kanji, separated by a configurable string, in the form of KANJI1 - READING1 - SENSE1 - KANJI2 - READING2 - ... (if the separator is - ). Note that this item greatly slows the export process.</li>
 <li><code>%strokes%</code> - Stroke count number, 1..30. Empty if the entry does not originate from KanjiDic.</li>
 <li><code>%skip%</code> - The skip code, e.g. 4-1-4. Empty if the entry does not originate from KanjiDic.</li>
 <li><code>%radical%</code> - The kanji radical character. Empty if the entry does not originate from KanjiDic.</li>
@@ -31,11 +54,34 @@ title: "Export"
 <li><code>%furigana%</code> (since Aedict 3.4.9): the ruby furigana, in the form of kana{kanji;reading}kana{kanji;reading}kana etc. If there are multiple kanjis with multiple readings, this is a comma-separated list of ruby furigana. If the entry has no kanji, this is just the reading. For example: 勉強を怠ける will be represented in furigana as {勉強;べんきょう}を{怠;なま}ける</li>
 <li><code>%notepad_category%</code> (since Aedict 3.4.32): if the entry is stored in the notepad, this will be replaced by the category name of the first category this entry appears in. If not, this will be an empty string.</li>
 <li><code>%tag%</code> (since Aedict 3.4.34): replaced by the text the entry is tagged with. If the entry has no tag, this will be an empty string.</li>
-<li><code>%tagcolor%</code> (since Aedict 3.39.11): replaced by the color name the entry is tagged with, one of blue, green, magenta, orange, red. If the entry has no tag, this will be an empty string.</li>
-<li><code>%furigana_anki%</code> (since Aedict 3.19): the ruby furigana, in the form as described here: <a href="http://code.google.com/p/aedict/issues/detail?id=493">bug #493</a>. For example, 勉強を怠ける is represented as 勉強[べんきょう]を 怠[なま]ける. If there are multiple kanjis with multiple readings, this is a comma-separated list of ruby furigana. If the entry has no kanji, this is just the reading. </li>
+<li><code>%tagcolor%</code> (since Aedict 3.39.11): replaced by the color name the entry is tagged with, one of blue, green, magenta, orange, red; any other color as # and its hex code. If the entry has no tag, this will be an empty string.</li>
+<li><code>%furigana_anki%</code> (since Aedict 3.19): the ruby furigana in Anki's own notation, kanji[reading], which Anki's <code>{% raw %}{{furigana:Field}}{% endraw %}</code> shows as furigana; a space goes before each kanji that doesn't start the text or follow a bracket. For example, 勉強を怠ける is represented as 勉強[べんきょう]を 怠[なま]ける. If there are multiple kanjis with multiple readings, this is a comma-separated list of ruby furigana. If the entry has no kanji, this is just the reading. </li>
 <li><code>%position_in_sentence%</code> (since Aedict 3.19): if the sentence analysis kicked in and produced this entry, this will be the original position in sentence, in the form of start_index,length. E.g. analyzing いろいろなのりものがはったつしました will also produce the word する as the last word, with the position of 14,4. If this entry has not been produced by the sentence analysis, then this will be empty.</li>
-<li><code>%deinflection_info%</code> (since Aedict 3.26): a newline-separated list of deinflections used to deinflect this word. For example あった -> あう, ある (I did X.)</li>
+<li><code>%deinflection_info%</code> (since Aedict 3.26): the deinflections used to deinflect this word, each one starting with "; ". For example "; あった -> あう, ある (Base Ta: I did X.)". Empty if the word was not deinflected.</li>
 </ul>
+<p>The same variables, without <code>%examples%</code> and <code>%words%</code>, come back from Aedict's search when an app asks for the results: see <code>return_results</code> in the <a href="api.html">API</a>.</p>
 
+</div>
+        <div class="clear"></div>
+
+<div style="padding-top: 46px" id="ankidroid">
+<h2>Export to AnkiDroid</h2>
+<p>With AnkiDroid installed, <i>Export to AnkiDroid</i> adds the entries straight into an AnkiDroid deck, no file involved. One entry opens an editor first, where you pick the deck and adjust the furigana, the meaning, the example sentences, the tags and a note of your own. Several entries go into the deck set in <i>Settings / Export / Always Export to Deck</i>, or into one you pick.</p>
+<p>On first use Aedict creates its own note type in AnkiDroid, <code>sk.baka.aedict3v8</code>, with three cards per note: <i>Kanji &gt; Kana+English</i>, <i>Kanji+Kana &gt; English</i> and <i>English &gt; Japanese</i>; suspend the ones you don't want in AnkiDroid. Every note is tagged <code>Aedict</code>. The note's fields are filled from the variables above:</p>
+<ul><li><i>Expression</i>: <code>%kanji%</code></li>
+<li><i>Reading</i>: <code>%reading%</code>, with the pitch accent marked in HTML when <i>Settings / Export / Export Pitch as HTML</i> is checked</li>
+<li><i>Meaning</i>: <code>%sense_no_flags%</code></li>
+<li><i>Furigana</i>: <code>%furigana_anki%</code></li>
+<li><i>Grammar</i>: <code>%grammar_codes%</code></li>
+<li><i>GrammarShort</i>: <code>%grammar_codes_short%</code></li>
+<li><i>Sentence</i>: <code>%examples%</code></li>
+<li><i>AedictTags</i>: <code>%tag%</code></li>
+<li><i>CustomNotes</i>: the note you typed in the editor; empty when exporting several entries</li>
+<li><i>Words</i>: <code>%words%</code></li></ul>
+<p>Unless <i>Settings / Export / Allow duplicates</i> is checked, an entry whose Expression is already in a note of this type, in any deck, is skipped.</p>
+<p>The cards ask for the Noto Sans JP font: copy it into AnkiDroid's <code>collection.media</code> folder as <code>_NotoSansJP-Regular.otf</code> and <code>_NotoSansJP-Bold.otf</code>. Without them AnkiDroid shows its default font.</p>
+
+<h3>Share</h3>
+<p><i>Share (First Entry Only)</i> sends one entry to any app, its card front as the subject and its back as the text. <i>Settings / Export / Export Flashcard front/back</i> picks which is which: <i>Kanji, Reading+English</i> (the default), <i>Kanji+Reading, English</i>, <i>English, Kanji+Reading</i> or <i>Kanji, English</i>. The <i>Send as Flashcard</i> swipe action exports the swiped entry to AnkiDroid when it is installed, and shares it otherwise.</p>
 </div>
         <div class="clear"></div>
