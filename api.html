@@ -37,7 +37,7 @@ page for more details.</p>
 as above. Older links of the form <code>https://aedict-online.eu/#!/はは</code> keep working.</p>
 
 <h3>From Your Android App</h3>
-<p>To query Aedict without showing its UI, use the <a href="#service">Service API</a> (since Aedict 3.30) or the <a href="#noui">no UI search</a>.</p>
+<p>To query Aedict without showing its UI, use the <a href="#service">Service API</a> (since Aedict 3.30) or the <a href="#noui">no UI search</a> (since Aedict 3.56.0).</p>
 <p>To display the Search Activity in Aedict, start the <code>"sk.baka.aedict3.action.ACTION_SEARCH_JMDICT"</code> intent with the following extras:</p>
 
 <table>
@@ -87,7 +87,13 @@ void searchFor(String word) {
 <div style="padding-top: 23px" id="noui">
 <h2>Searching for a string in Aedict, no UI</h2>
 <p>If you wish to use <code>return_results</code> but you do not like Aedict showing you UI, please use <code>"sk.baka.aedict3.action.ACTION_SEARCH_JMDICT_NOUI"</code> action instead. You can use all of the parameters mentioned above;
-however the <code>return_results</code> parameter will be ignored and will always be <code>true</code>. This is available since Aedict 3.18.</p>
+however the <code>return_results</code> parameter will be ignored and will always be <code>true</code>. Launch it as in the <code>return_results</code> example above.</p>
+<p><strong>It works since Aedict 3.56.0.</strong> Older Aedicts accept the intent but crash instead of answering, and your activity gets no result: for them, use the <a href="#service">Service API</a>. With the <code>&lt;queries&gt;</code> element from <a href="#detecting">Detecting Aedict</a>, the version tells which one to use:</p>
+<pre><code>static boolean isNoUiSearchWorking(Context context) throws PackageManager.NameNotFoundException {
+    final PackageInfo aedict = context.getPackageManager().getPackageInfo("sk.baka.aedict3", 0);
+    return PackageInfoCompat.getLongVersionCode(aedict) &gt;= 35600;  // 3.56.0
+}</code></pre>
+<p>Aedict runs one search at a time, shared with the Service API: a newer no UI search, <code>searchJmdict</code> or <code>analyze</code> cancels a no UI search still running, whose caller then gets <code>RESULT_CANCELED</code>. Until Aedict&apos;s dictionaries are downloaded, the result is a single entry whose <code>reading</code> asks the user to start Aedict and download them.</p>
 </div>
 
 <div style="padding-top: 23px">
@@ -136,6 +142,7 @@ final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_RESOLVE_KANJIDIC
 intent.putExtra("kanji", "豆頭");
 resolve.launch(intent);</code></pre>
 <p>The result intent's serializable extra <code>"result"</code> is an <code>ArrayList&lt;HashMap&lt;String, String&gt;&gt;</code>, one map per kanji, non-kanji characters ignored. Each map maps a variable name (without the percent signs) to its value; for a list of variables, please see <a href="export.html">Custom Export Format</a>.</p>
+<p>Until Aedict&apos;s dictionaries are downloaded, the result is a single entry whose <code>reading</code> asks the user to start Aedict and download them; Aedict before 3.56.0 crashes instead, and your activity gets no result.</p>
 <p><strong>Since Aedict 3.31:</strong> To resolve given kanji set and show the result on-screen, in Aedict&apos;s activity:</p>
 <pre><code>final Intent intent = new Intent("sk.baka.aedict3.action.ACTION_RESOLVE_KANJIS");
 intent.putExtra("kanjis", "豆頭");
@@ -194,5 +201,5 @@ startActivity(intent);</code></pre>
 <tr><td><code>analyze(sentence, id)</code></td><td>Splits a Japanese sentence into words, as the search&apos;s analysis fallback does. The first entry is the whole sentence, its <code>furigana</code> the sentence with readings.</td><td><code>onResult(id, entries)</code></td></tr>
 <tr><td><code>analyzeKanjipad(coords, forceFuzzy1Out, forceFuzzy2Out)</code></td><td>Recognizes a drawn kanji. <code>coords</code> holds 4 numbers per stroke: start x, start y, end x, end y, in any unit, y pointing down. With either flag true, kanji with up to two strokes more or fewer match too.</td><td><code>onKanjis(kanjis)</code></td></tr>
 </table>
-<p>The entries are maps as in <code>return_results</code> above. A request sent before the service connects waits, and goes out once it does. Aedict runs one search at a time: a new <code>searchJmdict</code> or <code>analyze</code> cancels the one still running, which then gets no reply, and the <code>id</code> tells which request a reply answers; a new drawing likewise cancels the previous one. Until Aedict&apos;s dictionaries are downloaded, every request but a drawing gets a single entry whose <code>reading</code> asks the user to start Aedict and download them.</p>
+<p>The entries are maps as in <code>return_results</code> above. A request sent before the service connects waits, and goes out once it does. Aedict runs one search at a time: a new <code>searchJmdict</code>, <code>analyze</code> or <a href="#noui">no UI search</a> cancels the one still running, which then gets no reply, and the <code>id</code> tells which request a reply answers; a new drawing likewise cancels the previous one. Until Aedict&apos;s dictionaries are downloaded, every request but a drawing gets a single entry whose <code>reading</code> asks the user to start Aedict and download them.</p>
 </div>
